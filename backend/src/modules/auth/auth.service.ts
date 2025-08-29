@@ -53,8 +53,9 @@ export class AuthService {
     return { token: this.jwtService.sign(payload) };
   }
 
-  async changePassword(changePasswordDto: ChangePasswordDto) {
-    const user = await this.userService.findOne(changePasswordDto.userId);
+  async changePassword(changePasswordDto: ChangePasswordDto, jwtUser: any) {
+    const userId = jwtUser.userId;
+    const user = await this.userService.findOne(userId);
     if (!user) throw new UnauthorizedException('User not found');
 
     const valid = await bcrypt.compare(
@@ -63,7 +64,7 @@ export class AuthService {
     );
     if (!valid) throw new UnauthorizedException('Old password is incorrect');
 
-    await this.userService.update(changePasswordDto.userId, {
+    await this.userService.update(userId, {
       password: changePasswordDto.newPassword,
     });
 
