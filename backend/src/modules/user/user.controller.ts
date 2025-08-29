@@ -8,11 +8,13 @@ import {
   Delete,
   HttpCode,
   HttpStatus,
+  Query,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiParam } from '@nestjs/swagger';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { UserFilterDto } from './dto/user-filter.dto';
 
 @ApiTags('Users')
 @Controller('user')
@@ -33,9 +35,13 @@ export class UserController {
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Get all users' })
   @ApiResponse({ status: 200, description: 'Users retrieved successfully' })
-  async findAll() {
-    const users = await this.userService.findAll();
-    return { message: 'Users retrieved successfully', users };
+  async findAll(@Query() userFilterDto: UserFilterDto) {
+    const result = await this.userService.findAll(userFilterDto);
+    return {
+      message: 'Users retrieved successfully',
+      items: result.data,
+      meta: result.meta,
+    };
   }
 
   @Get(':id')

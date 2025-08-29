@@ -1,10 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { UserFilterDto } from './dto/user-filter.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
+import { PaginationDto } from 'src/common/dto/pagination.dto';
+import { PaginatedResponse } from 'src/common/interfaces/pagination.interface';
+import { PaginationService } from 'src/common/services/pagination.service';
 
 @Injectable()
 export class UserService {
@@ -22,8 +26,27 @@ export class UserService {
     return this.userRepository.save(user);
   }
 
-  findAll() {
-    return this.userRepository.find();
+  findAll(filterDto: UserFilterDto): Promise<PaginatedResponse<User>> {
+    const queryBuilder = this.userRepository.createQueryBuilder('user');
+
+    // Apply filters
+    if (filterDto.username) {
+      queryBuilder.andWhere('user.username ILIKE :username', {
+        username: `%${filterDto.username}%`,
+      });
+    }
+
+    if (filterDto.role) {
+      queryBuilder.andWhere('user.role = :role', {
+        role: filterDto.role,
+      });
+    }
+
+    return PaginationService.paginate(
+      queryBuilder,
+      filterDto,
+      'user.createdAt',
+    );
   }
 
   findOne(id: number) {
