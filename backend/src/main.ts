@@ -9,6 +9,8 @@ async function bootstrap() {
     .setTitle('Employee Management API')
     .setDescription('API documentation for the Employee Management system')
     .setVersion('1.0')
+    .addBearerAuth()
+    .addSecurityRequirements('bearer')
     .build();
 
   const documentFactory = () => SwaggerModule.createDocument(app, config);
