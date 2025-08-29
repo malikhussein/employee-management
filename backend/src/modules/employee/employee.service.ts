@@ -28,12 +28,14 @@ export class EmployeeService {
     return this.employeeRepository.findOneBy({ id });
   }
 
-  update(id: number, updateEmployeeDto: UpdateEmployeeDto) {
+  async update(id: number, updateEmployeeDto: UpdateEmployeeDto) {
     const { departmentId, ...employeeData } = updateEmployeeDto;
-    return this.employeeRepository.update(id, {
+    await this.employeeRepository.update(id, {
       ...employeeData,
       ...(departmentId && { department: { id: departmentId } }),
     });
+
+    return this.findOne(id);
   }
 
   remove(id: number) {
