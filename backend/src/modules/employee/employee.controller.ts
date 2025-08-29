@@ -8,10 +8,12 @@ import {
   Delete,
   HttpStatus,
   HttpCode,
+  Query,
 } from '@nestjs/common';
 import { EmployeeService } from './employee.service';
 import { CreateEmployeeDto } from './dto/create-employee.dto';
 import { UpdateEmployeeDto } from './dto/update-employee.dto';
+import { EmployeeFilterDto } from './dto/employee-filter.dto';
 import { ApiOperation, ApiParam, ApiResponse } from '@nestjs/swagger';
 
 @Controller('employee')
@@ -32,9 +34,13 @@ export class EmployeeController {
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Get all employees' })
   @ApiResponse({ status: 200, description: 'Employees retrieved successfully' })
-  async findAll() {
-    const employees = await this.employeeService.findAll();
-    return { message: 'Employees retrieved successfully', employees };
+  async findAll(@Query() employeeFilterDto: EmployeeFilterDto) {
+    const result = await this.employeeService.findAll(employeeFilterDto);
+    return {
+      message: 'Employees retrieved successfully',
+      items: result.data,
+      meta: result.meta,
+    };
   }
 
   @Get(':id')
