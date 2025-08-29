@@ -2,6 +2,8 @@
 */dist
 */node_modules
 */build
+*/dist-ssr
+*/*.local
 
 # Logs
 */logs
@@ -18,3 +20,14 @@
 */.env.test.local
 */.env.production.local
 */.env.local
+
+# Editor directories and files
+*/.vscode/*
+*/!.vscode/extensions.json
+*/.idea
+*/.DS_Store
+*/*.suo
+*/*.ntvs*
+*/*.njsproj
+*/*.sln
+*/*.sw?
