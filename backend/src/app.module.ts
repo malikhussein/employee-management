@@ -17,7 +17,7 @@ import { AppDataSource } from './common/config/typeorm.config';
     TypeOrmModule.forRoot(AppDataSource.options),
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.registerAsync({
-      global: true, // This makes JWT module available globally
+      global: true,
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
         secret: configService.get<string>('JWT_SECRET') || 'default_secret',
