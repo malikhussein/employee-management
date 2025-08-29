@@ -1,11 +1,9 @@
+import { BaseEntity } from 'src/common/entities/base.entity';
 import { Department } from 'src/modules/department/entities/department.entity';
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('employee')
-export class Employee {
-  @PrimaryGeneratedColumn()
-  id: number;
-
+export class Employee extends BaseEntity {
   @Column()
   firstName: string;
 
