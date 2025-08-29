@@ -34,7 +34,8 @@ export class UserService {
     if (updateUserDto.password) {
       updateUserDto.password = await bcrypt.hash(updateUserDto.password, 10);
     }
-    return this.userRepository.update(id, updateUserDto);
+    await this.userRepository.update(id, updateUserDto);
+    return this.findOne(id);
   }
 
   remove(id: number) {
