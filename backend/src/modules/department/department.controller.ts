@@ -8,10 +8,13 @@ import {
   Delete,
   HttpCode,
   HttpStatus,
+  Query,
 } from '@nestjs/common';
+import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { DepartmentService } from './department.service';
 import { CreateDepartmentDto } from './dto/create-department.dto';
 import { UpdateDepartmentDto } from './dto/update-department.dto';
+import { DepartmentFilterDto } from './dto/department-filter.dto';
 
 @Controller('department')
 export class DepartmentController {
@@ -26,9 +29,18 @@ export class DepartmentController {
 
   @Get()
   @HttpCode(HttpStatus.OK)
-  async findAll() {
-    const departments = await this.departmentService.findAll();
-    return { message: 'Departments retrieved successfully', departments };
+  @ApiOperation({ summary: 'Get all departments' })
+  @ApiResponse({
+    status: 200,
+    description: 'Departments retrieved successfully',
+  })
+  async findAll(@Query() departmentFilterDto: DepartmentFilterDto) {
+    const result = await this.departmentService.findAll(departmentFilterDto);
+    return {
+      message: 'Departments retrieved successfully',
+      items: result.data,
+      meta: result.meta,
+    };
   }
 
   @Get(':id')
