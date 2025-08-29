@@ -30,6 +30,6 @@ export class DepartmentService {
   }
 
   remove(id: number) {
-    return this.departmentRepository.delete(id);
+    return this.departmentRepository.softDelete(id);
   }
 }

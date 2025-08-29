@@ -26,13 +26,12 @@ export class AuthService {
       throw new BadRequestException('User already exists');
     }
 
-    const hashedPassword = await bcrypt.hash(signUpDto.password, 10);
     const newUser = await this.userService.create({
       username: signUpDto.username,
-      password: hashedPassword,
+      password: signUpDto.password,
       role: RoleEnum.USER,
     });
-    return { user: newUser };
+    return newUser;
   }
 
   async signIn(signInDto: SignInDto) {

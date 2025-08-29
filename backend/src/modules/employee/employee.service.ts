@@ -37,6 +37,6 @@ export class EmployeeService {
   }
 
   remove(id: number) {
-    return this.employeeRepository.delete(id);
+    return this.employeeRepository.softDelete(id);
   }
 }
