@@ -25,8 +25,9 @@ export class DepartmentService {
     return this.departmentRepository.findOneBy({ id });
   }
 
-  update(id: number, updateDepartmentDto: UpdateDepartmentDto) {
-    return this.departmentRepository.update(id, updateDepartmentDto);
+  async update(id: number, updateDepartmentDto: UpdateDepartmentDto) {
+    await this.departmentRepository.update(id, updateDepartmentDto);
+    return this.departmentRepository.findOneBy({ id });
   }
 
   remove(id: number) {
