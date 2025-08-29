@@ -1,10 +1,13 @@
-import { Body, Controller, Post, UseGuards } from '@nestjs/common';
 import {
-  ApiTags,
-  ApiOperation,
-  ApiResponse,
-  ApiBearerAuth,
-} from '@nestjs/swagger';
+  Body,
+  Controller,
+  HttpCode,
+  HttpStatus,
+  Post,
+  UseGuards,
+  Request,
+} from '@nestjs/common';
+import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
 import { SignUpDto } from './dto/sign-up.dto';
 import { SignInDto } from './dto/sign-in.dto';
@@ -17,28 +20,39 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('signup')
+  @HttpCode(HttpStatus.CREATED)
   @ApiOperation({ summary: 'Register a new user' })
   @ApiResponse({ status: 201, description: 'User successfully created' })
   @ApiResponse({ status: 400, description: 'Bad request' })
   async signUp(@Body() signUpDto: SignUpDto) {
-    return this.authService.signUp(signUpDto);
+    const user = await this.authService.signUp(signUpDto);
+    return {
+      message: 'User successfully created',
+      ...user,
+    };
   }
 
   @Post('signin')
+  @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Sign in user' })
   @ApiResponse({ status: 200, description: 'User successfully signed in' })
   @ApiResponse({ status: 401, description: 'Invalid credentials' })
   async signIn(@Body() signInDto: SignInDto) {
-    return this.authService.signIn(signInDto);
+    const token = await this.authService.signIn(signInDto);
+    return { message: 'User successfully signed in', ...token };
   }
 
   @Post('change-password')
   @UseGuards(JwtAuthGuard)
-  @ApiBearerAuth()
+  @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Change user password' })
   @ApiResponse({ status: 200, description: 'Password successfully changed' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
-  async changePassword(@Body() changePasswordDto: ChangePasswordDto) {
-    return this.authService.changePassword(changePasswordDto);
+  async changePassword(
+    @Body() changePasswordDto: ChangePasswordDto,
+    @Request() req: any,
+  ) {
+    await this.authService.changePassword(changePasswordDto, req.user);
+    return { message: 'Password changed successfully' };
   }
 }
