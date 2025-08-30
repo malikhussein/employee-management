@@ -17,7 +17,7 @@ export default function Employees() {
   }, []);
 
   return (
-    <div className="flex flex-col container space-y-6">
+    <div className="flex flex-col p-6 space-y-6">
       <div className="flex flex-row justify-between">
         <h1 className="text-2xl font-bold">Employees</h1>
         <AddNewEmployeeDialog

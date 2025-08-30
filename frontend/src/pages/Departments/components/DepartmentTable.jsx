@@ -238,12 +238,12 @@ export default function DepartmentTable({ filters = {} }) {
 
       {/* Pagination info and controls */}
       {total > 0 && (
-        <div className="flex items-center justify-between py-4">
+        <div className="flex flex-col md:flex-row items-center justify-between py-4 gap-4">
           <div className="text-sm text-gray-700">
             Showing {startItem} to {endItem} of {total} results
           </div>
 
-          {totalPages > 1 && (
+          <div className="flex justify-center w-full md:w-auto">
             <Pagination>
               <PaginationContent>
                 <PaginationItem>
@@ -285,7 +285,7 @@ export default function DepartmentTable({ filters = {} }) {
                 </PaginationItem>
               </PaginationContent>
             </Pagination>
-          )}
+          </div>
         </div>
       )}
     </div>
