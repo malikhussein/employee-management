@@ -9,12 +9,17 @@ import {
   HttpCode,
   HttpStatus,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { DepartmentService } from './department.service';
 import { CreateDepartmentDto } from './dto/create-department.dto';
 import { UpdateDepartmentDto } from './dto/update-department.dto';
 import { DepartmentFilterDto } from './dto/department-filter.dto';
+import { Roles } from 'src/common/decorators/roles.decorator';
+import { RoleEnum } from '../user/enums/role.enum';
+import { JwtAuthGuard } from 'src/common/guards/jwt-auth.guard';
+import { RolesGuard } from 'src/common/guards/roles.guard';
 
 @Controller('department')
 export class DepartmentController {
@@ -22,6 +27,8 @@ export class DepartmentController {
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(RoleEnum.ADMIN)
   async create(@Body() createDepartmentDto: CreateDepartmentDto) {
     const department = await this.departmentService.create(createDepartmentDto);
     return { message: 'Department created successfully', ...department };
@@ -29,6 +36,7 @@ export class DepartmentController {
 
   @Get()
   @HttpCode(HttpStatus.OK)
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Get all departments' })
   @ApiResponse({
     status: 200,
@@ -45,6 +53,7 @@ export class DepartmentController {
 
   @Get(':id')
   @HttpCode(HttpStatus.OK)
+  @UseGuards(JwtAuthGuard)
   async findOne(@Param('id') id: string) {
     const department = await this.departmentService.findOne(+id);
     return { message: 'Department retrieved successfully', ...department };
@@ -52,6 +61,8 @@ export class DepartmentController {
 
   @Patch(':id')
   @HttpCode(HttpStatus.OK)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(RoleEnum.ADMIN)
   async update(
     @Param('id') id: string,
     @Body() updateDepartmentDto: UpdateDepartmentDto,
@@ -64,6 +75,8 @@ export class DepartmentController {
   }
 
   @Delete(':id')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(RoleEnum.ADMIN)
   @HttpCode(HttpStatus.OK)
   async remove(@Param('id') id: string) {
     await this.departmentService.remove(+id);
