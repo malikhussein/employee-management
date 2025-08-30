@@ -29,7 +29,7 @@ const useAuthStore = create((set) => ({
     set({ loading: true, error: null });
     try {
       const response = await api.post('/auth/signin', credentials);
-      const { token } = response.data;
+      const { token } = response.data.data;
 
       set({
         token,
@@ -51,11 +51,11 @@ const useAuthStore = create((set) => ({
     try {
       const response = await api.get('/auth/me');
       set({
-        user: response.data,
+        user: response.data.data,
         loading: false,
       });
-      localStorage.setItem('user', JSON.stringify(response.data));
-      return response.data;
+      localStorage.setItem('user', JSON.stringify(response.data.data));
+      return response.data.data;
     } catch (error) {
       set({
         loading: false,
