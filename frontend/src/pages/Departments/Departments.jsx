@@ -4,9 +4,11 @@ import React, { useState, useCallback } from 'react';
 import DepartmentTable from './components/DepartmentTable';
 import DepartmentSearchBar from './components/DepartmentSearchBar';
 import AddNewDepartmentDialog from './components/AddNewDepartmentDialog';
+import useAuthStore from '@/store/auth';
 
 export default function Departments() {
   const [filters, setFilters] = useState({});
+  const { user } = useAuthStore();
 
   const handleSearch = useCallback((searchFilters) => {
     setFilters(searchFilters);
@@ -20,14 +22,16 @@ export default function Departments() {
     <div className="flex flex-col p-6 space-y-6">
       <div className="flex flex-row justify-between">
         <h1 className="text-2xl font-bold">Departments</h1>
-        <AddNewDepartmentDialog
-          btn={
-            <Button>
-              <Plus className="h-4 w-4 mr-2" />
-              Add Department
-            </Button>
-          }
-        />
+        {user?.role === 'admin' && (
+          <AddNewDepartmentDialog
+            btn={
+              <Button>
+                <Plus className="h-4 w-4 mr-2" />
+                Add Department
+              </Button>
+            }
+          />
+        )}
       </div>
       <DepartmentSearchBar
         onSearch={handleSearch}

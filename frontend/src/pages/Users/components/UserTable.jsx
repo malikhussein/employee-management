@@ -23,8 +23,10 @@ import {
 import useUserStore from '@/store/user';
 import EditUserDialog from './EditUserDialog';
 import DeleteUserDialog from './DeleteUserDialog';
+import useAuthStore from '@/store/auth';
 
 function TableSkeleton() {
+  const { user } = useAuthStore();
   return (
     <div className="bg-white rounded-lg shadow overflow-hidden p-5">
       <div className="overflow-x-auto">
@@ -34,7 +36,7 @@ function TableSkeleton() {
               <TableHead>Username</TableHead>
               <TableHead>Role</TableHead>
               <TableHead>Created Date</TableHead>
-              <TableHead>Actions</TableHead>
+              {user?.role === 'admin' && <TableHead>Actions</TableHead>}
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -49,12 +51,14 @@ function TableSkeleton() {
                 <TableCell>
                   <Skeleton className="h-4 w-24" />
                 </TableCell>
-                <TableCell>
-                  <div className="flex space-x-2">
-                    <Skeleton className="h-8 w-8" />
-                    <Skeleton className="h-8 w-8" />
-                  </div>
-                </TableCell>
+                {user?.role === 'admin' && (
+                  <TableCell>
+                    <div className="flex space-x-2">
+                      <Skeleton className="h-8 w-8" />
+                      <Skeleton className="h-8 w-8" />
+                    </div>
+                  </TableCell>
+                )}
               </TableRow>
             ))}
           </TableBody>
@@ -82,6 +86,7 @@ export default function UserTable({ searchFilters }) {
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
+  const { user: currentUser } = useAuthStore();
 
   const limit = 10;
 
@@ -209,7 +214,7 @@ export default function UserTable({ searchFilters }) {
               <TableHead>Username</TableHead>
               <TableHead>Role</TableHead>
               <TableHead>Created Date</TableHead>
-              <TableHead>Actions</TableHead>
+              {currentUser?.role === 'admin' && <TableHead>Actions</TableHead>}
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -231,24 +236,26 @@ export default function UserTable({ searchFilters }) {
                   <TableCell>
                     {new Date(user.createdAt).toLocaleDateString()}
                   </TableCell>
-                  <TableCell>
-                    <div className="flex space-x-2">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => handleEdit(user)}
-                      >
-                        <Edit className="h-4 w-4" />
-                      </Button>
-                      <Button
-                        variant="destructive"
-                        size="sm"
-                        onClick={() => handleDelete(user)}
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </TableCell>
+                  {currentUser?.role === 'admin' && (
+                    <TableCell>
+                      <div className="flex space-x-2">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handleEdit(user)}
+                        >
+                          <Edit className="h-4 w-4" />
+                        </Button>
+                        <Button
+                          variant="destructive"
+                          size="sm"
+                          onClick={() => handleDelete(user)}
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </TableCell>
+                  )}
                 </TableRow>
               ))
             )}

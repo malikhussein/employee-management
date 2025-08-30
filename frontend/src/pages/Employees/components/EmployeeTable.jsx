@@ -22,10 +22,12 @@ import { Pencil, Trash2 } from 'lucide-react';
 import EditEmployeeDialog from './EditEmployeeDialog';
 import DeleteEmployeeDialog from './DeleteEmployeeDialog';
 import { Skeleton } from '@/components/ui/skeleton';
+import useAuthStore from '@/store/auth';
 
 export default function EmployeeTable({ filters = {} }) {
   const [currentPage, setCurrentPage] = useState(1);
   const { employees, metadata, getAll, loading, error } = useEmployeeStore();
+  const { user } = useAuthStore();
 
   // Reset page when filters change
   useEffect(() => {
@@ -128,7 +130,7 @@ export default function EmployeeTable({ filters = {} }) {
               <TableHead>Salary</TableHead>
               <TableHead>Department</TableHead>
               <TableHead>Hire Date</TableHead>
-              <TableHead>Actions</TableHead>
+              {user?.role === 'admin' && <TableHead>Actions</TableHead>}
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -149,12 +151,14 @@ export default function EmployeeTable({ filters = {} }) {
                 <TableCell>
                   <Skeleton className="h-4 w-24" />
                 </TableCell>
-                <TableCell>
-                  <div className="flex space-x-2">
-                    <Skeleton className="h-8 w-8" />
-                    <Skeleton className="h-8 w-8" />
-                  </div>
-                </TableCell>
+                {user?.role === 'admin' && (
+                  <TableCell>
+                    <div className="flex space-x-2">
+                      <Skeleton className="h-8 w-8" />
+                      <Skeleton className="h-8 w-8" />
+                    </div>
+                  </TableCell>
+                )}
               </TableRow>
             ))}
           </TableBody>
@@ -192,7 +196,7 @@ export default function EmployeeTable({ filters = {} }) {
               <TableHead>Salary</TableHead>
               <TableHead>Department</TableHead>
               <TableHead>Hire Date</TableHead>
-              <TableHead>Actions</TableHead>
+              {user?.role === 'admin' && <TableHead>Actions</TableHead>}
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -210,26 +214,28 @@ export default function EmployeeTable({ filters = {} }) {
                       ? new Date(employee.hireDate).toLocaleDateString()
                       : 'N/A'}
                   </TableCell>
-                  <TableCell>
-                    <div className="flex space-x-2">
-                      <EditEmployeeDialog
-                        employee={employee}
-                        btn={
-                          <Button size="sm">
-                            <Pencil />
-                          </Button>
-                        }
-                      />
-                      <DeleteEmployeeDialog
-                        employee={employee}
-                        btn={
-                          <Button size="sm" variant="destructive">
-                            <Trash2 className="h-4 w-4" />
-                          </Button>
-                        }
-                      />
-                    </div>
-                  </TableCell>
+                  {user?.role === 'admin' && (
+                    <TableCell>
+                      <div className="flex space-x-2">
+                        <EditEmployeeDialog
+                          employee={employee}
+                          btn={
+                            <Button size="sm">
+                              <Pencil />
+                            </Button>
+                          }
+                        />
+                        <DeleteEmployeeDialog
+                          employee={employee}
+                          btn={
+                            <Button size="sm" variant="destructive">
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          }
+                        />
+                      </div>
+                    </TableCell>
+                  )}
                 </TableRow>
               ))
             ) : (
