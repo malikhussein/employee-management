@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { api } from './api.js';
+import api from './api.js';
 
 const useUserStore = create((set) => ({
   loading: false,
@@ -15,8 +15,8 @@ const useUserStore = create((set) => ({
       const response = await api.get(`/user?${queryParams}`);
       set({
         loading: false,
-        users: response.data.data || response.data,
-        metadata: response.data.metadata || null,
+        users: response.data.data.items || response.data.data || response.data,
+        metadata: response.data.data.meta || response.data.metadata || null,
       });
       return response.data;
     } catch (error) {
