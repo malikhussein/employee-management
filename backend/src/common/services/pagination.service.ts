@@ -30,8 +30,8 @@ export class PaginationService {
     const totalPages = Math.ceil(totalItems / limit);
 
     const meta: PaginationMeta = {
-      page,
-      limit,
+      page: Number(page),
+      limit: Number(limit),
       totalItems,
       totalPages,
       hasNextPage: page < totalPages,
