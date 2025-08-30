@@ -15,8 +15,8 @@ const useEmployeeStore = create((set) => ({
       const response = await api.get(`/employee?${queryParams}`);
       set({
         loading: false,
-        employees: response.data.data || response.data,
-        metadata: response.data.metadata || null,
+        employees: response.data.data.items || response.data,
+        metadata: response.data.data.meta || null,
       });
       return response.data;
     } catch (error) {
