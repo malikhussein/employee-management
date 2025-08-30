@@ -68,4 +68,12 @@ export class AuthService {
       password: changePasswordDto.newPassword,
     });
   }
+
+  async getMe(jwtUser: any) {
+    const userId = jwtUser.userId;
+    const user = await this.userService.findOne(userId);
+    if (!user) throw new UnauthorizedException('User not found');
+
+    return user;
+  }
 }

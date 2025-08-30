@@ -6,6 +6,7 @@ import {
   Post,
   UseGuards,
   Request,
+  Get,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
@@ -54,5 +55,19 @@ export class AuthController {
   ) {
     await this.authService.changePassword(changePasswordDto, req.user);
     return { message: 'Password changed successfully' };
+  }
+
+  @Get('me')
+  @UseGuards(JwtAuthGuard)
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Get current user information' })
+  @ApiResponse({
+    status: 200,
+    description: 'User information retrieved successfully',
+  })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  async getMe(@Request() req: any) {
+    const user = await this.authService.getMe(req.user);
+    return { message: 'User information retrieved successfully', user };
   }
 }
