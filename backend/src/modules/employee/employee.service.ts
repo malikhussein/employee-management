@@ -32,6 +32,13 @@ export class EmployeeService {
       .leftJoinAndSelect('employee.department', 'department');
 
     // Apply filters
+    if (employeeFilterDto.search) {
+      queryBuilder.andWhere(
+        '(employee.firstName ILIKE :search OR employee.lastName ILIKE :search OR employee.email ILIKE :search)',
+        { search: `%${employeeFilterDto.search}%` },
+      );
+    }
+
     if (employeeFilterDto.firstName) {
       queryBuilder.andWhere('employee.firstName ILIKE :firstName', {
         firstName: `%${employeeFilterDto.firstName}%`,

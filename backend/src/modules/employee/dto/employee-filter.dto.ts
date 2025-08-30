@@ -11,6 +11,10 @@ import { PaginationDto } from 'src/common/dto/pagination.dto';
 export class EmployeeFilterDto extends PaginationDto {
   @IsOptional()
   @IsString()
+  search?: string;
+
+  @IsOptional()
+  @IsString()
   firstName?: string;
 
   @IsOptional()
