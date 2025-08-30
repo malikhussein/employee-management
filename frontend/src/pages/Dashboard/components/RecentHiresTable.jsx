@@ -19,7 +19,6 @@ export default function RecentHiresTable({ recentHires }) {
           <TableHeader className="bg-gray-200">
             <TableRow>
               <TableHead>Name</TableHead>
-              <TableHead>Position</TableHead>
               <TableHead>Department</TableHead>
               <TableHead>Date</TableHead>
             </TableRow>
@@ -27,10 +26,11 @@ export default function RecentHiresTable({ recentHires }) {
           <TableBody>
             {recentHires.map((hire) => (
               <TableRow key={hire.id}>
-                <TableCell>{hire.name}</TableCell>
-                <TableCell>{hire.position}</TableCell>
-                <TableCell>{hire.department}</TableCell>
-                <TableCell>{hire.date}</TableCell>
+                <TableCell>{`${hire.firstName} ${hire.lastName}`}</TableCell>
+                <TableCell>{hire.department?.name || 'N/A'}</TableCell>
+                <TableCell>
+                  {new Date(hire.hireDate).toLocaleDateString()}
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
