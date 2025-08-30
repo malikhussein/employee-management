@@ -25,7 +25,7 @@ export class DashboardController {
     const stats = await this.dashboardService.getStatistics();
     return {
       message: 'Dashboard statistics retrieved successfully',
-      data: stats,
+      ...stats,
     };
   }
 

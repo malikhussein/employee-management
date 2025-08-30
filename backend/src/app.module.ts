@@ -10,6 +10,7 @@ import { EmployeeModule } from './modules/employee/employee.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { AppDataSource } from './common/config/typeorm.config';
 import { DashboardModule } from './dashboard/dashboard.module';
+import { SeedModule } from './seed/seed.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { DashboardModule } from './dashboard/dashboard.module';
     EmployeeModule,
     AuthModule,
     DashboardModule,
+    SeedModule,
   ],
   controllers: [AppController],
   providers: [AppService],
