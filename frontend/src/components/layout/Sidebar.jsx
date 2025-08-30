@@ -1,11 +1,21 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Users, Building2, LogOut } from 'lucide-react';
+import {
+  LayoutDashboard,
+  Users,
+  Building2,
+  LogOut,
+  ShieldUser,
+  Key,
+} from 'lucide-react';
 import useAuthStore from '@/store/auth';
 import { Button } from '../ui/button';
+import ChangePasswordDialog from '@/pages/Auth/ChangePasswordDialog';
+
 export default function Sidebar() {
   const location = useLocation();
   const { signOut } = useAuthStore();
+  const [isChangePasswordOpen, setIsChangePasswordOpen] = useState(false);
   const navigation = [
     {
       name: 'Dashboard',
@@ -21,6 +31,11 @@ export default function Sidebar() {
       name: 'Departments',
       href: '/departments',
       icon: Building2,
+    },
+    {
+      name: 'Users',
+      href: '/users',
+      icon: ShieldUser,
     },
   ];
   const isActive = (path) => {
@@ -57,7 +72,15 @@ export default function Sidebar() {
               </Link>
             ))}
           </nav>
-          <div className="px-2 py-4 mx-6 border-t border-gray-200">
+          <div className="px-2 py-4 mx-6 border-t border-gray-200 space-y-2">
+            <Button
+              variant="outline"
+              onClick={() => setIsChangePasswordOpen(true)}
+              className="w-full px-2 py-2 text-sm font-medium rounded-md"
+            >
+              <Key className="mr-3 h-6 w-6" />
+              Change Password
+            </Button>
             <Button
               variant="destructive"
               onClick={signOut}
@@ -68,6 +91,11 @@ export default function Sidebar() {
             </Button>
           </div>
         </div>
+
+        <ChangePasswordDialog
+          open={isChangePasswordOpen}
+          onClose={() => setIsChangePasswordOpen(false)}
+        />
       </div>
     </div>
   );
